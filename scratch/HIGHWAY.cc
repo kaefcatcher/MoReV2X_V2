@@ -84,6 +84,68 @@ std::string FilePath;
 
 bool enableUDPfiles;
 
+std::ifstream traceFile;
+
+void opencsv(std::string name) {
+  //std::system(("cd xml2csv && python xml2csv.py -p " + name+".xml").c_str());
+  traceFile = std::ifstream("scratch/" + name + ".csv");
+  if (!traceFile.is_open()) {
+    std::cerr << "Error opening trace file!" << std::endl;
+    exit(1);
+  }
+}
+
+Vector getNextCoords(std::ifstream &traceFile) {
+  // Define static variable to keep track of file stream and current position
+  static std::string currentLine;
+
+  // Read the next line from the file
+  if (std::getline(traceFile, currentLine)) {
+    // Parse the line to extract x, y, and z positions
+    std::istringstream iss(currentLine);
+    std::string xposStr, yposStr, zposStr;
+    // , speedStr;
+    std::getline(iss, xposStr, ',');
+    std::getline(iss, yposStr, ',');
+    std::getline(iss, zposStr, ',');
+    // std:getline(iss, speedStr, ',');
+
+    // Convert positions to double
+    double xpos = std::stod(xposStr);
+    double ypos = std::stod(yposStr);
+    double zpos = std::stod(zposStr);
+    // double speed = std::stod(speedStr);
+
+    // Return the Vector with extracted positions
+    return Vector(xpos, ypos, zpos);
+  } else {
+    // If no more lines in the file, return an empty vector
+    return Vector(0.0, 0.0, 0.0);
+  }
+}
+
+void UpdateVehiclePositionsFromTrace(std::ifstream *traceFile, NodeContainer& vehicles) {
+    // Loop through all vehicles in the NodeContainer
+    for (NodeContainer::Iterator it = vehicles.Begin(); it != vehicles.End(); ++it) {
+            Ptr<Node> node = *it;
+            Ptr<ConstantVelocityMobilityModel> velMob = node->GetObject<ConstantVelocityMobilityModel>();
+            if (!velMob) {
+                NS_LOG_WARN("Node does not have ConstantVelocityMobilityModel. Skipping.");
+                continue;
+            }
+
+            // Update position and velocity of the vehicle
+            Vector newPos = getNextCoords(*traceFile);
+            velMob->SetPosition(newPos);
+            // velMob->SetVelocity(Vector(speed, 0, 0)); // Modify this if velocity in other directions is needed
+    }
+
+    // Schedule the next update 1 second later
+    // Simulator::Schedule (MilliSeconds (TrepPrint), &Print, vehicles);
+    // Simulator::Schedule(Seconds(1.0), &UpdateVehiclePositionsFromTrace, tracefile, vehicles);
+}
+
+
 uint32_t PacketSizeDistribution(void)
 {
   int sample = distribution(generator);
@@ -489,7 +551,9 @@ void Print (NodeContainer VehicleUEs) {
            PrevZ[ID-1] = pos.z;
         }         
      //   Simulator::Schedule (MilliSeconds (TrepPrint), &Print);
-        Simulator::Schedule (MilliSeconds (TrepPrint), &Print, VehicleUEs);      
+        Simulator::Schedule (MilliSeconds (TrepPrint), &Print, VehicleUEs);
+        if (traceFile.is_open())  
+        Simulator::Schedule(MilliSeconds (TrepPrint), &UpdateVehiclePositionsFromTrace, &traceFile, VehicleUEs);    
         positFile.close();
 }
 
@@ -521,6 +585,11 @@ main (int argc, char *argv[])
   // Provides uniform random variables.
   Ptr<UniformRandomVariable> random = CreateObject<UniformRandomVariable>(); 
  
+
+  // Initialize SUMO integration 
+  bool g_sumoOn = true;
+  // std::string g_tracefile = "home/kaefcatcher/Uni/MoReV2X_V2/scratch/trace.csv";
+
   // Initialize some values
   uint32_t mcs = 13; // The Modulation and Coding Scheme
   uint32_t pscchLength = 8;
@@ -594,7 +663,14 @@ main (int argc, char *argv[])
   Point polygonTX[] = {{975, 1870}, {1540, 1626}, {1965, 2121}, {2556, 3253}, {1798,3597}, {966,2492}}; 
   Point polygonRX[] = {{962, 1861}, {1541, 1614}, {1975, 2114}, {2572, 3258}, {1793,3609}, {953,2491}}; 
 
+  static std::string traceFileName="";
+
   CommandLine cmd;
+
+  // SUMO related cmd arguments
+  cmd.AddValue("sumo_on", "Enable SUMO integration", g_sumoOn);
+  cmd.AddValue("tracefile", "Path to SUMO trace file", traceFileName);
+
   cmd.AddValue ("Vehicles", "Number of vehicles", ueCount);
   cmd.AddValue ("period", "Sidelink period", period);
   cmd.AddValue ("pscchLength", "Length of PSCCH.", pscchLength);
@@ -788,6 +864,8 @@ main (int argc, char *argv[])
   readme.open (outputPath + "simREADME.txt");
   readme << "----------------------" << std::endl;
   readme << "Simulation:" << std::endl;
+  readme << "SUMO ON:" << g_sumoOn << std::endl;
+  readme << "Trace file name:" << traceFileName << std::endl;
   readme << " - simulation time = " << simTime << " s " << std::endl;
   readme << " - seed = " << seed << std::endl; 
   readme << " - run = " << runNumber << std::endl;
@@ -1057,8 +1135,14 @@ main (int argc, char *argv[])
   }
   mobilityUE.SetPositionAllocator(positionAlloc);
   mobilityUE.SetMobilityModel("ns3::ConstantVelocityMobilityModel");
-  //mobilityUE->SetVelocity({20,0,0});
   mobilityUE.Install (ueResponders);
+  if (g_sumoOn && traceFileName!=""){
+    opencsv(traceFileName);
+    UpdateVehiclePositionsFromTrace(&traceFile, ueResponders);
+    // SUMO position calculated
+  }
+  else{
+  //mobilityUE->SetVelocity({20,0,0});
 
   for (NodeContainer::Iterator L = ueResponders.Begin(); L != ueResponders.End(); ++L)
   {  
@@ -1071,6 +1155,7 @@ main (int argc, char *argv[])
     else
       VelMob->SetVelocity(Vector(-19.44, 0, 0));
 //      VelMob->SetVelocity(Vector(0, 0, 0));          
+  }
   }
   
 /*  MobilityHelper mobilityUE;
@@ -1155,7 +1240,7 @@ main (int argc, char *argv[])
     
   }
 
-//  Print(ueResponders);  // Print the initial position of the nodes in the output file
+ Print(ueResponders);  // Print the initial position of the nodes in the output file
    
 
   Sl3GPPChannelMatrix->InitChannelMatrix(ueResponders);
