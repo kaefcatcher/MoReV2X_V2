@@ -88,14 +88,14 @@ std::ifstream traceFile;
 
 void opencsv(std::string name) {
   //std::system(("cd xml2csv && python xml2csv.py -p " + name+".xml").c_str());
-  traceFile = std::ifstream("scratch/" + name + ".csv");
+  traceFile = std::ifstream("xml2csv/" + name + ".csv");
   if (!traceFile.is_open()) {
     std::cerr << "Error opening trace file!" << std::endl;
     exit(1);
   }
 }
 
-Vector getNextCoords(std::ifstream &traceFile) {
+std::pair<Vector,Vector> getNextCoords(std::ifstream &traceFile) {
   // Define static variable to keep track of file stream and current position
   static std::string currentLine;
 
@@ -103,24 +103,23 @@ Vector getNextCoords(std::ifstream &traceFile) {
   if (std::getline(traceFile, currentLine)) {
     // Parse the line to extract x, y, and z positions
     std::istringstream iss(currentLine);
-    std::string xposStr, yposStr, zposStr;
-    // , speedStr;
+    std::string xposStr, yposStr, zposStr, speedStr;
     std::getline(iss, xposStr, ',');
     std::getline(iss, yposStr, ',');
     std::getline(iss, zposStr, ',');
-    // std:getline(iss, speedStr, ',');
+    std::getline(iss, speedStr, ',');
 
     // Convert positions to double
     double xpos = std::stod(xposStr);
     double ypos = std::stod(yposStr);
     double zpos = std::stod(zposStr);
-    // double speed = std::stod(speedStr);
+    double speed = std::stod(speedStr);
 
-    // Return the Vector with extracted positions
-    return Vector(xpos, ypos, zpos);
+    // Return the Vector with extracted positions and speed
+    return std::make_pair(Vector(xpos, ypos, zpos),Vector(speed,0.0,0.0));
   } else {
     // If no more lines in the file, return an empty vector
-    return Vector(0.0, 0.0, 0.0);
+    return std::make_pair(Vector(0.0, 0.0, 0.0),Vector(0.0,0.0,0.0));
   }
 }
 
@@ -135,9 +134,11 @@ void UpdateVehiclePositionsFromTrace(std::ifstream *traceFile, NodeContainer& ve
             }
 
             // Update position and velocity of the vehicle
-            Vector newPos = getNextCoords(*traceFile);
+            std::pair<Vector,Vector> newData = getNextCoords(*traceFile);
+            Vector newPos = newData.first;
+            Vector newSpeed = newData.second;
             velMob->SetPosition(newPos);
-            // velMob->SetVelocity(Vector(speed, 0, 0)); // Modify this if velocity in other directions is needed
+            velMob->SetVelocity(newSpeed); // Modify this if velocity in other directions is needed
     }
 
     // Schedule the next update 1 second later
@@ -212,7 +213,7 @@ UdpClient::Send (void)
     v2xTag.SetMessageType (0x00); //CAM, @LUCA just want to work with CAMs
     v2xTag.SetTrafficType (VehicleTrafficType[nodeId-1]); // Coexistence of periodic and aperiodic traffic
     v2xTag.SetPPPP (0x00); // PPPP for CAM
-    v2xTag.SetPrsvp ((double) (1000 * m_interval.GetSeconds ())); // the required PHY reservation interval. For periodic traffic is ok
+    v2xTag.SetPrsvp ((double) 100); // the required PHY reservation interval. For periodic traffic is ok
     v2xTag.SetNodeId ((uint32_t) nodeId); // Encapsulate the nodeId. It will be used at MAC layer
     v2xTag.SetReselectionCounter((uint16_t)10000); //safe value for standard-compliant Cresel assignment
 
@@ -265,7 +266,7 @@ UdpClient::Send (void)
     else  // Periodic traffic
     {
       T_gen = Periodic_Tgen[nodeId-1];
-      v2xTag.SetPrsvp ((double) Periodic_Tgen[nodeId-1]);
+      v2xTag.SetPrsvp ((double) 100);
 //      v2xTag.SetPdb ((double) v2xTag.GetPrsvp ()); // @LUCA modified later
       v2xTag.SetPdb ((double)PDB_Periodic[nodeId-1]); // @LUCA modified later
       m_size = PeriodicPKTs_Size[Pattern_index[nodeId-1]%5];
@@ -518,15 +519,15 @@ void Print (NodeContainer VehicleUEs) {
             Ptr<MobilityModel> mob = node->GetObject<MobilityModel> ();
             if (! mob) continue; // Strange -- node has no mobility model installed. Skip.
             Vector pos = mob->GetPosition ();
-          //  Vector vel = mob->GetVelocity ();
-            Vector vel;
-            VelX[ID-1] = 0;
-            VelY[ID-1] = 0;
-            VelZ[ID-1] = 0;
+            Vector vel = mob->GetVelocity ();
+            // Vector vel;
+            // VelX[ID-1] = 0;
+            // VelY[ID-1] = 0;
+            // VelZ[ID-1] = 0;
 
-            VelX[ID-1] = (pos.x-PrevX[ID-1])/MeasInterval;
-            VelY[ID-1] = (pos.y-PrevY[ID-1])/MeasInterval;
-            VelZ[ID-1] = (pos.z-PrevZ[ID-1])/MeasInterval;
+            // VelX[ID-1] = (pos.x-PrevX[ID-1])/MeasInterval;
+            // VelY[ID-1] = (pos.y-PrevY[ID-1])/MeasInterval;
+            // VelZ[ID-1] = (pos.z-PrevZ[ID-1])/MeasInterval;
 
        //     vel.x = VelX[ID-1];
        //     vel.y = VelY[ID-1];
@@ -536,10 +537,10 @@ void Print (NodeContainer VehicleUEs) {
             inside = PositionChecker.isInsidePoly("RX", p);
 
             if (inside){
-              positFile << Simulator::Now().GetSeconds() << "," << ID << "," << pos.x << "," << pos.y << "," << pos.z << "," << VelX[ID-1] << "," << VelY[ID-1] << "," << VelZ[ID-1] << "," << (int)VehicleTrafficType[ID-1] << "," << "1" << "\r\n";
+              positFile << Simulator::Now().GetSeconds() << "," << ID << "," << pos.x << "," << pos.y << "," << pos.z << "," << vel.x << "," << vel.y << "," << vel.z << "," << (int)VehicleTrafficType[ID-1] << "," << "1" << "\r\n";
             }
             else
-              positFile << Simulator::Now().GetSeconds() << "," << ID << "," << pos.x << "," << pos.y << "," << pos.z << "," << VelX[ID-1] << "," << VelY[ID-1] << "," << VelZ[ID-1] << "," << (int)VehicleTrafficType[ID-1] << "," << "0" << "\r\n";
+              positFile << Simulator::Now().GetSeconds() << "," << ID << "," << pos.x << "," << pos.y << "," << pos.z << "," << vel.x << "," << vel.y << "," << vel.z << "," << (int)VehicleTrafficType[ID-1] << "," << "0" << "\r\n";
 
             EnableTX[ID-1] = true;
             if (!PositionChecker.isEnabled(pos))
@@ -550,10 +551,9 @@ void Print (NodeContainer VehicleUEs) {
            PrevY[ID-1] = pos.y;
            PrevZ[ID-1] = pos.z;
         }         
-     //   Simulator::Schedule (MilliSeconds (TrepPrint), &Print);
-        Simulator::Schedule (MilliSeconds (TrepPrint), &Print, VehicleUEs);
+        Simulator::Schedule (Seconds (1), &Print, VehicleUEs);
         if (traceFile.is_open())  
-        Simulator::Schedule(MilliSeconds (TrepPrint), &UpdateVehiclePositionsFromTrace, &traceFile, VehicleUEs);    
+        Simulator::Schedule(Seconds (1), &UpdateVehiclePositionsFromTrace, &traceFile, VehicleUEs);    
         positFile.close();
 }
 
@@ -1389,7 +1389,7 @@ main (int argc, char *argv[])
     if (PeriodicTraffic)
     {
       mac->PushNewRRIValue(100);
-      mac->PushNewRRIValue(20);
+      // mac->PushNewRRIValue(20);
     }
     else if (AperiodicTraffic)
     {

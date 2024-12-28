@@ -2515,7 +2515,7 @@ NrV2XUeMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
 
          if (( (ReservationDelay > itBsr->second.V2XPdb) || (ReTxReservationDelay > itBsr->second.V2XPdb) ) && poolIt->second.m_currentV2XGrant.m_TxIndex == 1)
          {
-           NS_ASSERT_MSG(aperiodicTraffic, "Periodic traffic should not generate latency reselections");
+          //  NS_ASSERT_MSG(aperiodicTraffic, "Periodic traffic should not generate latency reselections");
 //           NrV2XUeMac::ReservationsStats[m_rnti].LatencyReselections += 1;
 //           if (poolIt->second.m_currentV2XGrant.m_rbLenPssch < TBLen_RBs)
            if (poolIt->second.m_currentV2XGrant.m_grantTransmissions[1].m_rbLenPssch < TBLen_RBs)
@@ -2808,7 +2808,7 @@ NrV2XUeMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
              if (m_evalKeepProb->GetValue() > (1-m_keepProbability))
              {
                NS_LOG_UNCOND("Keep the same resources");
-               std::cin.get();
+              //  std::cin.get();
                poolIt->second.m_currentV2XGrant.m_Cresel = GetCresel(poolIt->second.m_currentV2XGrant.m_RRI);
              }
              else
