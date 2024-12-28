@@ -666,10 +666,13 @@ main (int argc, char *argv[])
   static std::string traceFileName="";
 
   CommandLine cmd;
-
+  double pkeep = 0.0;
   // SUMO related cmd arguments
   cmd.AddValue("sumo_on", "Enable SUMO integration", g_sumoOn);
   cmd.AddValue("tracefile", "Path to SUMO trace file", traceFileName);
+
+  // Pkeep
+  cmd.AddValue("pkeep", "Persistence scheduling coefficient", pkeep);
 
   cmd.AddValue ("Vehicles", "Number of vehicles", ueCount);
   cmd.AddValue ("period", "Sidelink period", period);
@@ -917,6 +920,7 @@ main (int argc, char *argv[])
   }
   else
     readme << " --- Frequency-reuse disabled " << std::endl;
+  readme << "Pkeep: " << pkeep << std::endl;
 
   readme.close ();
 
@@ -969,6 +973,9 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::NrV2XUeMac::AdaptiveScheduling", BooleanValue (AdaptiveSchedulingMode2));
   Config::SetDefault ("ns3::NrV2XUeMac::UMHReEvaluation", BooleanValue (UMH_ReEvaluation));
   Config::SetDefault ("ns3::NrV2XUeMac::FrequencyReuse", BooleanValue (FrequencyReuse));
+
+  // Pkeep
+  Config::SetDefault ("ns3::NrV2XUeMac::Pkeep", DoubleValue(pkeep));
 
 
   // Configure Power Control and Phy layer
@@ -1389,7 +1396,6 @@ main (int argc, char *argv[])
     if (PeriodicTraffic)
     {
       mac->PushNewRRIValue(100);
-      // mac->PushNewRRIValue(20);
     }
     else if (AperiodicTraffic)
     {

@@ -464,6 +464,11 @@ NrV2XUeMac::GetTypeId (void)
                                         DoubleValue (1.0),
                                         MakeDoubleAccessor (&NrV2XUeMac::m_savingPeriod),
                                         MakeDoubleChecker<double> ())
+                .AddAttribute ("Pkeep",
+                                      "Specify pkeep coefficient",
+                                      DoubleValue (0.0),
+                                      MakeDoubleAccessor (&NrV2XUeMac::m_keepProbability),
+                                      MakeDoubleChecker<double> ())
 ;																									;
 	return tid;
 }
@@ -492,7 +497,7 @@ NrV2XUeMac::NrV2XUeMac ()
    m_L_SubCh (1),
 //   m_BW_RBs (50),
    m_maxPDB(110.0),
-   m_keepProbability (0.0),
+  //  m_keepProbability (0.0),
    m_sizeThreshold (0.2),
    m_sensingWindow (1100),
    m_oneShotGrant (false)
