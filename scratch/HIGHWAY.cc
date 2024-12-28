@@ -265,7 +265,7 @@ UdpClient::Send (void)
     }
     else  // Periodic traffic
     {
-      T_gen = Periodic_Tgen[nodeId-1];
+      T_gen = 100;
       v2xTag.SetPrsvp ((double) 100);
 //      v2xTag.SetPdb ((double) v2xTag.GetPrsvp ()); // @LUCA modified later
       v2xTag.SetPdb ((double)PDB_Periodic[nodeId-1]); // @LUCA modified later
