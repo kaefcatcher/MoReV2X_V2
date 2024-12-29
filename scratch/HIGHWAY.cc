@@ -42,7 +42,7 @@ std::discrete_distribution<int> distribution {8, 2};
 
 Ipv4Address groupAddress; //use multicast address as destination --> broadcast 
 
-int TrepPrint = 100; // (ms). Set the interval for printing the V-UE stats
+int TrepPrint = 100; // (ms). Set the interval for printing and updating the V-UE stats
 //int PDBaperiodic = 50;
 int Tgen_aperiodic_c;
 
@@ -551,9 +551,9 @@ void Print (NodeContainer VehicleUEs) {
            PrevY[ID-1] = pos.y;
            PrevZ[ID-1] = pos.z;
         }         
-        Simulator::Schedule (Seconds (1), &Print, VehicleUEs);
+        Simulator::Schedule (MilliSeconds(TrepPrint), &Print, VehicleUEs);
         if (traceFile.is_open())  
-        Simulator::Schedule(Seconds (1), &UpdateVehiclePositionsFromTrace, &traceFile, VehicleUEs);    
+        Simulator::Schedule(MilliSeconds(TrepPrint), &UpdateVehiclePositionsFromTrace, &traceFile, VehicleUEs);    
         positFile.close();
 }
 
