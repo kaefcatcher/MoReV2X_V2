@@ -18,7 +18,7 @@ The upgrade of MoReV2X to the latest version of ns-3 is currently underway, stay
 
 # Getting Started
 First, you need to download the MoReV2X simulator on your computer. To do so, run the following command:   
-`git clone https://github.com/LLusvarghi/MoReV2X.git `
+`git clone https://github.com/kaefcatcher/MoReV2X_V2.git `
 
 ## Building with waf
 Before running one of the scripts from the `scratch` folder, configure the build with the following command:   
@@ -26,6 +26,17 @@ Before running one of the scripts from the `scratch` folder, configure the build
 
 and then build ns-3 typing   
 `./waf`
+
+## To make SUMO simulation examples:
+
+1) cd xml2csv
+2) make sim_300
+3) make sim_600
+
+Steps 2 and 3 may take some time as the simulations are quite big to make.
+
+4) cd ..
+5) python run_simulator.py -c simulations/3_traffic_types/config.yaml
 
 # About
 List of people who contributed to this project: 
