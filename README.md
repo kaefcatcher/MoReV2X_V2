@@ -29,14 +29,14 @@ and then build ns-3 typing
 
 ## To make SUMO simulation examples:
 
-1) cd xml2csv
-2) make sim_300
-3) make sim_600
+1) `cd xml2csv`
+2) `make sim_300`
+3) `make sim_600`
 
 Steps 2 and 3 may take some time as the simulations are quite big to make.
 
-4) cd ..
-5) python run_simulator.py -c simulations/3_traffic_types/config.yaml
+4) `cd ..`
+5) `python run_simulator.py -c simulations/3_traffic_types/config.yaml`
 
 # About
 List of people who contributed to this project: 
@@ -46,6 +46,6 @@ List of people who contributed to this project:
 * Alejandro Molina-Galan, Universidad Miguel Hernandez de Elche (UMH), Spain
 * Baldomero Coll-Perales, Universidad Miguel Hernandez de Elche (UMH), Spain
 * Javier Gozalvez, Universidad Miguel Hernandez de Elche (UMH), Spain
-
+* Daniil Shembel, National Research University Higher School of Economics (HSE), Russia
 # License
 The MoReV2X module is licensed under the GNU GPLv2 license.
