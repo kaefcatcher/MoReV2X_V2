@@ -1,0 +1,15 @@
+Vehicles: [20]
+simTime: 40
+runNo: 1
+noIBE: true
+Numerology: 0
+ChannelBW: [25]
+SubChannel: 25
+seed: 1
+Periodic: true
+RSRP: -120.24
+mcs: 16
+PDB: 100
+pkeep: [0]
+sumo_on: true
+tracefile: ["data"]
