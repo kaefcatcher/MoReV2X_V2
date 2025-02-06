@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<net version="1.20" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="0.00,0.00" convBoundary="0.00,0.00,5000.00,0.00" origBoundary="0.00,-10.00,5000.00,10.00" projParameter="!"/>
+
+    <edge id="E0" from="J0" to="J1" priority="1">
+        <lane id="E0_0" index="0" speed="33.33" length="2500.00" shape="0.00,-8.00 2500.00,-8.00"/>
+        <lane id="E0_1" index="1" speed="33.33" length="2500.00" shape="0.00,-4.80 2500.00,-4.80"/>
+        <lane id="E0_2" index="2" speed="33.33" length="2500.00" shape="0.00,-1.60 2500.00,-1.60"/>
+    </edge>
+    <edge id="E1" from="J1" to="J2" priority="1">
+        <lane id="E1_0" index="0" speed="33.33" length="2500.00" shape="2500.00,-8.00 5000.00,-8.00"/>
+        <lane id="E1_1" index="1" speed="33.33" length="2500.00" shape="2500.00,-4.80 5000.00,-4.80"/>
+        <lane id="E1_2" index="2" speed="33.33" length="2500.00" shape="2500.00,-1.60 5000.00,-1.60"/>
+    </edge>
+    <edge id="E2" from="J2" to="J1" priority="1">
+        <lane id="E2_0" index="0" speed="33.33" length="2500.00" shape="5000.00,8.00 2500.00,8.00"/>
+        <lane id="E2_1" index="1" speed="33.33" length="2500.00" shape="5000.00,4.80 2500.00,4.80"/>
+        <lane id="E2_2" index="2" speed="33.33" length="2500.00" shape="5000.00,1.60 2500.00,1.60"/>
+    </edge>
+    <edge id="E3" from="J1" to="J0" priority="1">
+        <lane id="E3_0" index="0" speed="33.33" length="2500.00" shape="2500.00,8.00 0.00,8.00"/>
+        <lane id="E3_1" index="1" speed="33.33" length="2500.00" shape="2500.00,4.80 0.00,4.80"/>
+        <lane id="E3_2" index="2" speed="33.33" length="2500.00" shape="2500.00,1.60 0.00,1.60"/>
+    </edge>
+
+    <junction id="J0" type="dead_end" x="0.00" y="0.00" incLanes="E3_0 E3_1 E3_2" intLanes="" shape="0.00,0.00 0.00,9.60 0.00,0.00"/>
+    <junction id="J1" type="priority" x="2500.00" y="0.00" incLanes="E2_0 E2_1 E2_2 E0_0 E0_1 E0_2" intLanes="" shape="2500.00,9.60 2500.00,-9.60 2500.00,9.60">
+    <request index="0" response="000000" foes="000000"/>
+        <request index="1" response="000000" foes="000000"/>
+        <request index="2" response="000000" foes="000000"/>
+        <request index="3" response="000000" foes="000000"/>
+        <request index="4" response="000000" foes="000000"/>
+        <request index="5" response="000000" foes="000000"/>
+    </junction>
+    <junction id="J2" type="dead_end" x="5000.00" y="0.00" incLanes="E0_0 E0_1 E0_2" intLanes="" shape="5000.00,0.00 5000.00,-9.60 5000.00,0.00"/>
+
+    <connection from="E0" to="E1" fromLane="0" toLane="0" linkIndex="0" dir="s" state="O"/>
+    <connection from="E0" to="E1" fromLane="1" toLane="1" linkIndex="1" dir="s" state="O"/>
+    <connection from="E0" to="E1" fromLane="2" toLane="2" linkIndex="2" dir="s" state="O"/>
+    <connection from="E1" to="E2" fromLane="0" toLane="0" dir="t" state="M"/>
+    <connection from="E1" to="E2" fromLane="1" toLane="1" dir="t" state="M"/>
+    <connection from="E1" to="E2" fromLane="2" toLane="2" dir="t" state="M"/>
+    <connection from="E2" to="E3" fromLane="0" toLane="0" linkIndex="0" dir="s" state="O"/>
+    <connection from="E2" to="E3" fromLane="1" toLane="1" linkIndex="1" dir="s" state="O"/>
+    <connection from="E2" to="E3" fromLane="2" toLane="2" linkIndex="2" dir="s" state="O"/>
+
+</net>
