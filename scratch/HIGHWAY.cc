@@ -837,14 +837,14 @@ main (int argc, char *argv[])
   //------------------- Configure the output path ---------------------------------------------------------
   
   if (PeriodicTraffic)
-    outputPath = "results/Periodic_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) +  "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "/"; 
+    outputPath = "results/Periodic_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) +  "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "_" + + std::to_string(pkeep) + "/"; 
   else if (AperiodicTraffic)
-    outputPath = "results/Aperiodic_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) + "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "/"; 
+    outputPath = "results/Aperiodic_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) + "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "_" + std::to_string(pkeep) "/"; 
   else
     if (AdaptiveSchedulingMode2)
-      outputPath = "results/MixedAdaptive_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) + "_Perc" + std::to_string(PeriodicPercentage) + "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "/"; 
+      outputPath = "results/MixedAdaptive_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) + "_Perc" + std::to_string(PeriodicPercentage) + "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "_" + std::to_string(pkeep) + "/"; 
     else
-      outputPath = "results/Mixed_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) + "_Perc" + std::to_string(PeriodicPercentage) + "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "/"; 
+      outputPath = "results/Mixed_Dynamic" + std::to_string(DynamicSchedulingMode2) + "_avgRRI" + std::to_string(avgRRI) + "_VariableSize" + std::to_string(VariablePacketSize) + "_ReEval" + std::to_string(ReEvaluation) + "_" + std::to_string(ueCount) + "_PDB" + std::to_string(inputPDB) + "_Perc" + std::to_string(PeriodicPercentage) + "_" + std::to_string(seed) + "_" + std::to_string(runNumber) + "_" + std::to_string(pkeep) + "/"; 
 
   //--------------------------------------------------------------------------------------------------------
 
