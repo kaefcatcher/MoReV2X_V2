@@ -9,12 +9,17 @@ def parse_and_run(config_file):
 
     base_command = "./waf --run 'scratch/HIGHWAY"
 
+    # Handle Vehicles separately
+    vehicles_config = config.pop("Vehicles", None)
+
+    # Process all other parameters
     param_keys = config.keys()
     param_values = [
         config[key] if isinstance(config[key], list) else [config[key]]
         for key in param_keys
     ]
 
+    # Generate combinations for non-Vehicles parameters
     combinations = [{}]
     for key, values in zip(param_keys, param_values):
         new_combinations = []
@@ -25,10 +30,36 @@ def parse_and_run(config_file):
                 new_combinations.append(new_combination)
         combinations = new_combinations
 
+    # Now handle Vehicles combinations
+    if vehicles_config:
+        new_combinations = []
+        if not combinations:
+            combinations = [{}]
+
+        for vehicle in vehicles_config:
+            for combination in combinations:
+                new_combination = combination.copy()
+                # Handle both single string and list of tracefiles
+                tracefiles = vehicle["tracefile"]
+                if isinstance(tracefiles, str):
+                    tracefiles = [tracefiles]
+                new_combination["Vehicles"] = vehicle["_val"]
+                new_combination["tracefile"] = tracefiles
+                new_combinations.append(new_combination)
+        combinations = new_combinations
+
     for combination in combinations:
         params = []
         for key, value in combination.items():
-            params.append("--{}={}".format(key, value))
+            if key == "tracefile":
+                # Handle multiple tracefiles by joining them with commas
+                if isinstance(value, list):
+                    params.append("--{}={}".format(key, ",".join(value)))
+                else:
+                    params.append("--{}={}".format(key, value))
+            else:
+                params.append("--{}={}".format(key, value))
+
         full_command = "{} {}'".format(base_command, " ".join(params))
         print("Running command: {}".format(full_command))
         subprocess.call(full_command, shell=True)
