@@ -176,3 +176,15 @@ xml_parser_lights(
     "data_traffic_light_long_small.csv",
 )
 print(8)
+xml_parser_lights(
+    "traffic_light_semilong_small/raw.xml",
+    "traffic_light_semilong_small/highway.net.xml",
+    "data_traffic_light_semilong_small.csv",
+)
+print(9)
+xml_parser_lights(
+    "traffic_light_semilong_medium/raw.xml",
+    "traffic_light_semilong_medium/highway.net.xml",
+    "data_traffic_light_semilong_medium.csv",
+)
+print(10)
