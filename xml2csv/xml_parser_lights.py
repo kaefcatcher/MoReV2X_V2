@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import csv
 
+
 def xml_parser_lights(raw_file, net_file, output_file):
     def reassign_vehicle_ids(file_path):
         tree = ET.parse(file_path)
@@ -53,7 +54,14 @@ def xml_parser_lights(raw_file, net_file, output_file):
                         break
 
                 if not found:
-                    timestep_data.append((vehicle_id, None, -10**6-5*10**3*(int(raw_number_id)-1), 0))
+                    timestep_data.append(
+                        (
+                            vehicle_id,
+                            None,
+                            -(10**6) - 5 * 10**3 * (int(raw_number_id) - 1),
+                            0,
+                        )
+                    )
 
             result[time] = timestep_data
 
@@ -119,17 +127,52 @@ def xml_parser_lights(raw_file, net_file, output_file):
 
     create_coordinates_csv(output_file, coordinates)
 
-xml_parser_lights("traffic_light_big/raw.xml", "traffic_light_big/highway.net.xml", "data_traffic_light_big.csv")
+
+xml_parser_lights(
+    "traffic_light_big/raw.xml",
+    "traffic_light_big/highway.net.xml",
+    "data_traffic_light_big.csv",
+)
 print(1)
-xml_parser_lights("traffic_light_large/raw.xml", "traffic_light_large/highway.net.xml", "data_traffic_light_large.csv")
+xml_parser_lights(
+    "traffic_light_large/raw.xml",
+    "traffic_light_large/highway.net.xml",
+    "data_traffic_light_large.csv",
+)
 print(2)
-xml_parser_lights("traffic_light_medium/raw.xml", "traffic_light_medium/highway.net.xml", "data_traffic_light_medium.csv")
+xml_parser_lights(
+    "traffic_light_medium/raw.xml",
+    "traffic_light_medium/highway.net.xml",
+    "data_traffic_light_medium.csv",
+)
 print(3)
-xml_parser_lights("traffic_light_small/raw.xml", "traffic_light_small/highway.net.xml", "data_traffic_light_small.csv")
+xml_parser_lights(
+    "traffic_light_small/raw.xml",
+    "traffic_light_small/highway.net.xml",
+    "data_traffic_light_small.csv",
+)
 print(4)
-xml_parser_lights("2_traffic_lights_large/raw.xml", "2_traffic_lights_large/highway.net.xml", "data_2_traffic_lights_large.csv")
+xml_parser_lights(
+    "2_traffic_lights_large/raw.xml",
+    "2_traffic_lights_large/highway.net.xml",
+    "data_2_traffic_lights_large.csv",
+)
 print(5)
-xml_parser_lights("baseline_large/raw.xml", "baseline_large/highway.net.xml", "data_baseline_large.csv")
+xml_parser_lights(
+    "baseline_large/raw.xml",
+    "baseline_large/highway.net.xml",
+    "data_baseline_large.csv",
+)
 print(6)
-xml_parser_lights("traffic_light_long/raw.xml", "traffic_light_long/highway.net.xml", "data_traffic_light_long.csv")
+xml_parser_lights(
+    "traffic_light_long/raw.xml",
+    "traffic_light_long/highway.net.xml",
+    "data_traffic_light_long.csv",
+)
 print(7)
+xml_parser_lights(
+    "traffic_light_long_small/raw.xml",
+    "traffic_light_long_small/highway.net.xml",
+    "data_traffic_light_long_small.csv",
+)
+print(8)
