@@ -25,7 +25,6 @@ def xml_parser_lights(raw_file, net_file, output_file):
 
         return vehicle_mapping
 
-
     def get_vehicle_positions(file_path, vehicle_ids):
         tree = ET.parse(file_path)
         root = tree.getroot()
@@ -60,7 +59,6 @@ def xml_parser_lights(raw_file, net_file, output_file):
 
         return result
 
-
     def calculate_coordinates_from_lane(shape, pos, lane_length):
         points = [tuple(map(float, point.split(","))) for point in shape.split()]
 
@@ -72,7 +70,6 @@ def xml_parser_lights(raw_file, net_file, output_file):
         z = 0
 
         return x, y, z
-
 
     def convert_to_coordinates(vehicle_data, net_file):
         tree = ET.parse(net_file)
@@ -134,3 +131,5 @@ xml_parser_lights("2_traffic_lights_large/raw.xml", "2_traffic_lights_large/high
 print(5)
 xml_parser_lights("baseline_large/raw.xml", "baseline_large/highway.net.xml", "data_baseline_large.csv")
 print(6)
+xml_parser_lights("traffic_light_long/raw.xml", "traffic_light_long/highway.net.xml", "data_traffic_light_long.csv")
+print(7)

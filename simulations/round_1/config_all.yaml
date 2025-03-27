@@ -1,8 +1,8 @@
-Vehicles:
+Vehicles: 
   - _val: 175
     tracefile: ["data_traffic_light_small"]
   - _val: 350
-    tracefile: ["data_traffic_light_medium"]
+    tracefile: ["data_traffic_light_medium", "data_traffic_light_long"]
   - _val: 500
     tracefile: ["data_traffic_light_big"]
   - _val: 700
